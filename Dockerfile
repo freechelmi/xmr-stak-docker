@@ -7,10 +7,10 @@ ARG DISTRO_VERSION=16.04
 FROM nvidia/cuda:${CUDA_VERSION}-${BUILD_FLAVOUR}-${DISTRO_NAME}${DISTRO_VERSION} as build
 
 ENV GIT_REPOSITORY=https://github.com/fireice-uk/xmr-stak.git \
-    GIT_BRANCH=master
+    GIT_BRANCH=xmr-stak-rx
 ENV CMAKE_FLAGS -DXMR-STAK_COMPILE=generic -DCUDA_ENABLE=ON -DOpenCL_ENABLE=ON
 
-COPY donate-level.patch /tmp
+#COPY donate-level.patch /tmp
 
 WORKDIR /tmp
 
@@ -18,7 +18,6 @@ RUN  set -x \
   && apt-get update \
   && apt-get install -qq --no-install-recommends -y build-essential ca-certificates cmake git libhwloc-dev libmicrohttpd-dev libssl-dev ocl-icd-opencl-dev \
   && git clone --single-branch --depth 1 --branch $GIT_BRANCH $GIT_REPOSITORY xmr-stak \
-  && git -C xmr-stak apply /tmp/donate-level.patch \
   && cd xmr-stak \
   && cmake ${CMAKE_FLAGS} . \
   && make \
